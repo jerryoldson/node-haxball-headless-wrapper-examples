@@ -1,0 +1,3 @@
+[submodule "external-scripts/thenorthstar"]
+	path = external-scripts/thenorthstar
+	url = https://github.com/thenorthstar/HaxBall-Example-Scripts
