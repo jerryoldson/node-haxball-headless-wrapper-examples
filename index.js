@@ -16,7 +16,7 @@ global.HBInit = (args) => {
 
 const scriptPath = process.argv[2];
 if (!scriptPath) {
-  console.error("❌ You must provide a script path, e.g.: node index.js Beginner/Powershot");
+  console.error("❌ You must provide a script path, e.g.: node index.js thenorthstar/Beginner/Collision");
   process.exit(1);
 }
 
