@@ -4,12 +4,13 @@ const headlessWrapper = require("node-haxball/src/headlessWrapper");
 const API = initNh(); // initiate node-haxball API
 const { HBInit } = headlessWrapper(API); // pass API object to headlessWrapper
 
-const HAXBALL_TOKEN = "thr1.AAAAAGiwpnoOX5tbPqO68g.wCSP49KytFw"; // required
+const HAXBALL_TOKEN = ""; // required
 
 // we need this global function so external-scripts can use it normally
 global.HBInit = (args) => {
   args.token = HAXBALL_TOKEN;
   const room = HBInit(args); // this is wrapper HBInit!!!
+  room.onRoomLink = (link) => console.log(link);
   return room;
 };
 
