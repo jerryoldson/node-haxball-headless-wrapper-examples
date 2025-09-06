@@ -28,7 +28,8 @@ Promise.all([
   loadScript("https://cdn.jsdelivr.net/gh/wxyz-abcd/node-haxball@latest/examples_web/src/vendor/json5.min.js", false),
   loadScript("https://cdn.jsdelivr.net/gh/wxyz-abcd/node-haxball@latest/examples_web/src/vendor/pako-jszip.min.js", false),
   loadScript("https://cdn.jsdelivr.net/gh/wxyz-abcd/node-haxball@latest/src/api.js", false), 
-  loadScript("https://cdn.jsdelivr.net/gh/wxyz-abcd/node-haxball@latest/examples/languages/englishLanguage.js", true) // if you want to use error.toString()
+  //loadScript("https://cdn.jsdelivr.net/gh/wxyz-abcd/node-haxball@latest/examples/languages/englishLanguage.js", true), // if you want to use error.toString()
+  loadScript("https://cdn.jsdelivr.net/gh/wxyz-abcd/node-haxball@latest/src/headlessWrapper.js", false)
 ]).then(([i, j, k, l])=>{
   if (token.length>0)
     start();
@@ -65,39 +66,43 @@ function _start(API, fStart){
   window.document.body.innerHTML = "";
   console.log("starting with token = "+token);
 
-  API.Language.current = new EnglishLanguage(API); // if you want to use error.toString()
+  //API.Language.current = new EnglishLanguage(API); // if you want to use error.toString()
   fStart(API);
 }
 
 function start(){
+  const API = window.abcHaxballAPI(window);
   _start(API, example);
 }
 
-function example(API){
-    loadScript("https://cdn.jsdelivr.net/gh/wxyz-abcd/node-haxball@latest/src/headlessWrapper.js", true).then(()=>{
-        const { HBInit } = headlessWrapper(API);
-        
-        window.startHeadless = (arg) => {
-            if (typeof arg == "function") {
-                arg();
-            } else if (typeof arg == "string") {
-                loadScript(arg, false);
-            } else {
-                console.error("startHeadless requires a function or a string")
-            }
-        }
+function example(API) {
+  const { HBInit } = headlessWrapper(API);
 
-        const myScript = () => {
-            const room = HBInit({ name: "my pretty haxball script :)" });
-            room.onRoomLink = (link) => console.log(link);
-            room.onPlayerJoin = (player) => {
-                console.log(`${player.name} joined the room`);
-                room.sendAnnouncement(`Welcome ${player.name}!`, player.id, 0xFFFFFF, "bold", 2);
-                room.setPlayerAdmin(player.id, true);
-            };
-        };
+  window.startHeadless = (arg) => {
+    if (typeof arg == "function") {
+      arg();
+    } else if (typeof arg == "string") {
+      loadScript(arg, false);
+    } else {
+      console.error("startHeadless requires a function or a string");
+    }
+  };
 
-        startHeadless(myScript);
-        //startHeadless("https://raw.githubusercontent.com/thenorthstar/HaxBall-Example-Scripts/4dc7384e9b3fe095e1183357919ae0675eba4f55/Beginner/Collision.js");
-    });
+  const myScript = () => {
+    const room = HBInit({ roomName: "my pretty haxball script :)", token: token, maxPlayers: 16, public: true, geo: {lat: 50, lon: 55, flag: "ar"} });
+    room.onRoomLink = (link) => console.log(link);
+    room.onPlayerJoin = (player) => {
+      console.log(`${player.name} joined the room`);
+      room.sendAnnouncement(
+        `Welcome ${player.name}!`,
+        player.id,
+        0xffffff,
+        "bold",
+        2
+      );
+      room.setPlayerAdmin(player.id, true);
+    };
+  };
+
+  startHeadless(myScript);
 }
